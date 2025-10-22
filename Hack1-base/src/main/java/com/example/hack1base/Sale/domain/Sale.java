@@ -2,7 +2,9 @@ package com.example.hack1base.Sale.domain;
 
 import com.example.hack1base.User.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -11,10 +13,12 @@ import java.time.LocalDateTime;
 @Table(name = "sales")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private Long id;
 
     @Column(nullable = false)
     private String sku;

@@ -18,7 +18,7 @@ public class ReportRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private Long id;
 
     @Column(nullable = false)
     private String branch; // sucursal del reporte
