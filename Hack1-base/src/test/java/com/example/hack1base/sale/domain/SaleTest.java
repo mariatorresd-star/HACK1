@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 @Transactional
-class SaleEntityTest {
+class SaleTest {
 
     @PersistenceContext
     EntityManager em;
