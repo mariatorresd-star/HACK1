@@ -1,6 +1,7 @@
 package com.example.hack1base.User.application;
 
 import com.example.hack1base.User.domain.User;
+import com.example.hack1base.User.domain.UserResponse;
 import com.example.hack1base.User.domain.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,23 +18,23 @@ public class UserController {
 
     // ---------- AUTH ----------
     @PostMapping("/auth/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<UserResponse> register(@RequestBody User user) {
         return ResponseEntity.ok(userService.register(user));
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<User> login(@RequestBody User request) {
+    public ResponseEntity<UserResponse> login(@RequestBody User request) {
         return ResponseEntity.ok(userService.login(request.getEmail(), request.getPassword()));
     }
 
     // ---------- USERS ----------
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
