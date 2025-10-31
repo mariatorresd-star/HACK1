@@ -1,6 +1,7 @@
 package com.example.hack1base.ReportRequest.domain;
 
 import com.example.hack1base.ReportRequest.estructrure.ReportRequestRepository;
+import com.example.hack1base.Exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +41,7 @@ public class ReportRequestService {
                     report.setMessage(updatedRequest.getMessage());
                     return reportRequestRepository.save(report);
                 })
-                .orElseThrow(() -> new RuntimeException("ReportRequest not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("ReportRequest not found"));
     }
 
     // Eliminar un reporte

@@ -1,6 +1,7 @@
 package com.example.hack1base.Sale.domain;
 
 import com.example.hack1base.Sale.estructure.SaleRepository;
+import com.example.hack1base.Exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class SaleService {
                     sale.setCreatedBy(saleDetails.getCreatedBy());
                     return saleRepository.save(sale);
                 })
-                .orElseThrow(() -> new RuntimeException("Sale not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Sale not found"));
     }
 
     // Eliminar una venta

@@ -3,7 +3,7 @@ package com.example.hack1base.events.domain;
 import com.example.hack1base.salesaggregation.domain.SalesAggregates;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class EmailService {
             mailSender.send(message);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error enviando email: " + e.getMessage());
+            throw new com.example.hack1base.Exceptions.ServiceUnavailableException("Error enviando email: " + e.getMessage());
         }
     }
 }
