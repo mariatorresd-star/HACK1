@@ -14,22 +14,18 @@ public class ReportRequestService {
 
     private final ReportRequestRepository reportRequestRepository;
 
-    // Crear un nuevo reporte
     public ReportRequest createReportRequest(ReportRequest reportRequest) {
         return reportRequestRepository.save(reportRequest);
     }
 
-    // Obtener todos los reportes
     public List<ReportRequest> getAllReportRequests() {
         return reportRequestRepository.findAll();
     }
 
-    // Buscar reporte por ID
     public Optional<ReportRequest> getReportRequestById(Long id) {
         return reportRequestRepository.findById(id);
     }
 
-    // Actualizar el estado o mensaje de un reporte
     public ReportRequest updateReportRequest(Long id, ReportRequest updatedRequest) {
         return reportRequestRepository.findById(id)
                 .map(report -> {
@@ -44,7 +40,6 @@ public class ReportRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException("ReportRequest not found"));
     }
 
-    // Eliminar un reporte
     public void deleteReportRequest(Long id) {
         reportRequestRepository.deleteById(id);
     }

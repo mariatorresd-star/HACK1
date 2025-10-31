@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class GithubModelsClient {
+public class GithubModelsClients {
 
         @Value("${GITHUB_MODELS_URL}")
         private String modelsUrl;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class ReportEventListener {
 
     private final SalesAggregationService aggregationService;
-    private final GithubModelsClient githubModelsClient;
+    private final GithubModelsClients githubModelsClient;
     private final EmailService emailService;
 
     @Async

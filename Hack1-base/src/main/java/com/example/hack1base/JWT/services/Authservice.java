@@ -5,7 +5,7 @@ import com.example.hack1base.JWT.security.JwtService;
 import com.example.hack1base.JWT.web.AuthResponse;
 import com.example.hack1base.JWT.web.LoginRequest;
 import com.example.hack1base.JWT.web.RegisterRequest;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +40,13 @@ public class AuthService {
 
     public Account register(RegisterRequest req) {
         if (accountService.findByEmailOpt(req.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email ya registrado");
+            throw new com.example.hack1base.Exceptions.ConflictException("Email ya registrado");
+        }
+        if (!req.isRoleValid()) {
+            throw new IllegalArgumentException("Role inválido. Debe ser CENTRAL o BRANCH");
+        }
+        if ("BRANCH".equalsIgnoreCase(req.getRole()) && (req.getBranch() == null || req.getBranch().isBlank())) {
+            throw new IllegalArgumentException("Branch es obligatorio cuando el role es BRANCH");
         }
         Account a = new Account();
         a.setEmail(req.getEmail());

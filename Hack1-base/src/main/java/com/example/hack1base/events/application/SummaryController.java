@@ -2,6 +2,7 @@ package com.example.hack1base.events.application;
 
 import com.example.hack1base.events.domain.ReportRequestedEvent;
 import com.example.hack1base.events.dto.SummaryRequest;
+import com.example.hack1base.JWT.domain.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +38,22 @@ public class SummaryController {
             request.setTo(today);
         }
 
+        if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_BRANCH"))) {
+            if (request.getBranch() == null || request.getBranch().isBlank()) {
+                return ResponseEntity.status(400).body(Map.of("error", "BAD_REQUEST", "message", "Branch es obligatorio para usuarios BRANCH"));
+            }
+            Object principal = auth.getPrincipal();
+            if (principal instanceof Account acc) {
+                String userBranch = acc.getBranch();
+                if (userBranch != null && !request.getBranch().equalsIgnoreCase(userBranch)) {
+                    return ResponseEntity.status(403).body(Map.of("error", "FORBIDDEN", "message", "No puede solicitar resúmenes de otra sucursal"));
+                }
+            }
+        }
+
         String requestId = UUID.randomUUID().toString();
         publisher.publishEvent(new ReportRequestedEvent(this, request, requestId, auth.getName()));
 
-        // Retornar respuesta inmediata
         Map<String, Object> response = Map.of(
                 "requestId", requestId,
                 "status", "PROCESSING",

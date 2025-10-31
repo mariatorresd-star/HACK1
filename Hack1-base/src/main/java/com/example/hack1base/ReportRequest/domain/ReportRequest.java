@@ -21,7 +21,7 @@ public class ReportRequest {
     private Long id;
 
     @Column(nullable = false)
-    private String branch; // sucursal del reporte
+    private String branch; 
 
     @Column(nullable = false)
     private LocalDate fromDate;
@@ -30,14 +30,14 @@ public class ReportRequest {
     private LocalDate toDate;
 
     @Column(nullable = false)
-    private String emailTo; // destinatario del resumen
+    private String emailTo; 
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReportStatus status = ReportStatus.PROCESSING;
 
     @Column
-    private String message; // mensaje del resumen o estado
+    private String message; 
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime requestedAt = LocalDateTime.now();
