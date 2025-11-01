@@ -1,6 +1,5 @@
 package com.example.hack1base.User.domain;
 
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,8 @@ import static org.assertj.core.api.Assertions.*;
 class UserResponseTest {
 
     @Test
-    @DisplayName("Getters/Setters de @Data funcionan y preservan valores")
-    void dataAnnotation_gettersSetters() {
+    @DisplayName("should preserve values via getters and setters")
+    void shouldPreserveValuesViaGettersAndSetters() {
         LocalDateTime now = LocalDateTime.now();
 
         UserResponse dto = new UserResponse();
@@ -34,12 +33,12 @@ class UserResponseTest {
     }
 
     @Nested
-    @DisplayName("equals / hashCode / toString de @Data")
+    @DisplayName("equals / hashCode / toString (@Data)")
     class EqualityAndToString {
 
         @Test
-        @DisplayName("equals/hashCode: mismos campos → iguales; id distinto → distintos")
-        void equalsAndHashCode() {
+        @DisplayName("should consider equals/hashCode equal for same fields and different when id differs")
+        void shouldConsiderEqualsAndHashCodeForSameFieldsAndDifferentWhenIdDiffers() {
             LocalDateTime t = LocalDateTime.of(2025, 1, 1, 12, 0);
 
             UserResponse a = new UserResponse();
@@ -72,8 +71,8 @@ class UserResponseTest {
         }
 
         @Test
-        @DisplayName("toString: contiene nombre de clase y campos clave")
-        void toStringContainsFields() {
+        @DisplayName("should include class name and key fields in toString")
+        void shouldIncludeClassNameAndKeyFieldsInToString() {
             UserResponse dto = new UserResponse();
             dto.setId("1");
             dto.setUsername("alice");
@@ -89,8 +88,8 @@ class UserResponseTest {
     }
 
     @Test
-    @DisplayName("ModelMapper: mapea desde User → UserResponse (Long→String, Enum→String)")
-    void modelMapper_mapsUserToUserResponse() {
+    @DisplayName("should map User to UserResponse with ModelMapper (Long→String, Enum→String)")
+    void shouldMapUserToUserResponseWithModelMapper() {
         User user = new User();
         user.setId(123L);
         user.setUsername("bob");

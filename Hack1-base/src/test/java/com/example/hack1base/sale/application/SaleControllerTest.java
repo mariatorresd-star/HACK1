@@ -1,6 +1,5 @@
 package com.example.hack1base.sale.application;
 
-
 import com.example.hack1base.Exceptions.ForbiddenException;
 import com.example.hack1base.Exceptions.ResourceNotFoundException;
 import com.example.hack1base.Exceptions.UnauthorizedException;
@@ -105,8 +104,8 @@ class SaleControllerTest {
     // ========== TESTS ==========
 
     @Test
-    @DisplayName("POST /api/sales - CENTRAL puede crear y retorna 200")
-    void createSale_asCentral_success() throws Exception {
+    @DisplayName("should allow CENTRAL to create sale and return 200 OK")
+    void shouldCreateSaleAsCentralReturnOk() throws Exception {
         // Arrange
         Account acc = mock(Account.class);
         when(acc.getRole()).thenReturn("CENTRAL");
@@ -130,7 +129,6 @@ class SaleControllerTest {
         when(saleService.createSale(entityToCreate)).thenReturn(created);
         when(modelMapper.map(created, SaleResponse.class)).thenReturn(resp);
 
-        // Act & Assert
         mvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json.writeValueAsString(req)))
@@ -143,9 +141,9 @@ class SaleControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/sales - BRANCH no puede crear en otra sucursal (403)")
-    void createSale_asBranchOtherBranch_forbidden() throws Exception {
-        // Arrange
+    @DisplayName("should forbid BRANCH from creating in a different branch (403)")
+    void shouldForbidBranchCreatingInAnotherBranch() throws Exception {
+
         Account acc = mock(Account.class);
         when(acc.getRole()).thenReturn("BRANCH");
         when(acc.getBranch()).thenReturn("Surco");
@@ -158,7 +156,6 @@ class SaleControllerTest {
         req.setBranch("Miraflores");
         req.setSoldAt(LocalDateTime.now());
 
-        // Act & Assert
         mvc.perform(post("/api/sales")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json.writeValueAsString(req)))
@@ -167,9 +164,9 @@ class SaleControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/sales - BRANCH fuerza su propia sucursal")
-    void getAllSales_branchRole_forcesBranch() throws Exception {
-        // Arrange
+    @DisplayName("should force Account branch when role is BRANCH on GET /api/sales")
+    void shouldForceAccountBranchWhenRoleIsBranchOnGetAllSales() throws Exception {
+
         Account acc = mock(Account.class);
         when(acc.getRole()).thenReturn("BRANCH");
         when(acc.getBranch()).thenReturn("Surco");
@@ -187,7 +184,6 @@ class SaleControllerTest {
                 s.getSoldAt(), "userX", LocalDateTime.now());
         when(modelMapper.map(eq(s), eq(SaleResponse.class))).thenReturn(mapped);
 
-        // Act
         mvc.perform(get("/api/sales")
                         .param("from", "2025-01-01")
                         .param("to", "2025-01-31")
@@ -198,31 +194,29 @@ class SaleControllerTest {
                 .andExpect(jsonPath("$.content[0].branch", is("Surco")))
                 .andExpect(jsonPath("$.totalElements", is(1)));
 
-        // Assert adicional: el branch que se pasó al servicio es "Surco"
         ArgumentCaptor<String> branchCap = ArgumentCaptor.forClass(String.class);
         verify(saleService).findSales(eq(start), eq(end), branchCap.capture(), eq(pageable));
         assertEquals("Surco", branchCap.getValue(), "El controller debe forzar el branch del Account");
     }
 
     @Test
-    @DisplayName("GET /api/sales/{id} - 404 cuando no existe")
-    void getSaleById_notFound() throws Exception {
-        // Arrange
+    @DisplayName("should return 404 Not Found when sale does not exist")
+    void shouldReturnNotFoundWhenSaleDoesNotExist() throws Exception {
+
         Account acc = mock(Account.class);
         when(acc.getRole()).thenReturn("CENTRAL");
         setSecurity(acc);
 
         when(saleService.getSaleById(999L)).thenReturn(Optional.empty());
 
-        // Act & Assert
         mvc.perform(get("/api/sales/999"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("GET /api/sales - parsea from/to a startOfDay y endOfDay")
-    void getAllSales_parsesDatesCorrectly() throws Exception {
-        // Arrange
+    @DisplayName("should parse from/to into startOfDay and endOfDay")
+    void shouldParseFromToAsStartAndEndOfDay() throws Exception {
+
         Account acc = mock(Account.class);
         when(acc.getRole()).thenReturn("CENTRAL");
         setSecurity(acc);
@@ -234,7 +228,6 @@ class SaleControllerTest {
         Page<Sale> page = new PageImpl<>(java.util.List.of(), pageable, 0);
         when(saleService.findSales(any(), any(), any(), any())).thenReturn(page);
 
-        // Act
         mvc.perform(get("/api/sales")
                         .param("from", "2025-05-01")
                         .param("to", "2025-05-15")
@@ -242,7 +235,6 @@ class SaleControllerTest {
                         .param("size", "5"))
                 .andExpect(status().isOk());
 
-        // Assert
         ArgumentCaptor<LocalDateTime> startCap = ArgumentCaptor.forClass(LocalDateTime.class);
         ArgumentCaptor<LocalDateTime> endCap = ArgumentCaptor.forClass(LocalDateTime.class);
         verify(saleService).findSales(startCap.capture(), endCap.capture(), any(), eq(pageable));

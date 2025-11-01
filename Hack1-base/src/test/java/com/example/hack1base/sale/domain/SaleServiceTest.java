@@ -3,7 +3,7 @@ package com.example.hack1base.sale.domain;
 import com.example.hack1base.Sale.domain.Sale;
 import com.example.hack1base.Sale.domain.SaleService;
 import com.example.hack1base.Sale.estructure.SaleRepository;
-import com.example.hack1base.User.domain.Role;   // <<< IMPORTA TU ENUM
+import com.example.hack1base.User.domain.Role;
 import com.example.hack1base.User.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,8 +51,8 @@ class SaleServiceTest {
     }
 
     @Test
-    @DisplayName("createSale debe guardar y devolver la venta")
-    void createSale_ok() {
+    @DisplayName("should save sale and return persisted entity")
+    void shouldSaveSaleAndReturnPersistedEntity() {
         when(saleRepository.save(any(Sale.class))).thenAnswer(inv -> inv.getArgument(0));
 
         Sale result = saleService.createSale(saleBase);
@@ -70,8 +70,8 @@ class SaleServiceTest {
     }
 
     @Test
-    @DisplayName("getAllSales debe retornar la lista de ventas")
-    void getAllSales_ok() {
+    @DisplayName("should return all sales")
+    void shouldReturnAllSales() {
         User creator2 = new User();
         creator2.setUsername("user2");
         creator2.setEmail("user2@mail.com");
@@ -97,8 +97,8 @@ class SaleServiceTest {
     }
 
     @Test
-    @DisplayName("getSaleById debe devolver Optional con la venta si existe")
-    void getSaleById_found() {
+    @DisplayName("should return sale by id when it exists")
+    void shouldReturnSaleByIdWhenExists() {
         when(saleRepository.findById(100L)).thenReturn(Optional.of(saleBase));
 
         Optional<Sale> found = saleService.getSaleById(100L);
@@ -110,8 +110,8 @@ class SaleServiceTest {
     }
 
     @Test
-    @DisplayName("getSaleById debe devolver Optional.empty si no existe")
-    void getSaleById_empty() {
+    @DisplayName("should return empty optional when sale does not exist")
+    void shouldReturnEmptyOptionalWhenSaleDoesNotExist() {
         when(saleRepository.findById(200L)).thenReturn(Optional.empty());
 
         Optional<Sale> found = saleService.getSaleById(200L);
@@ -122,8 +122,8 @@ class SaleServiceTest {
     }
 
     @Test
-    @DisplayName("updateSale debe copiar campos de saleDetails y guardar")
-    void updateSale_ok() {
+    @DisplayName("should copy fields from details and save sale")
+    void shouldCopyFieldsFromDetailsAndSaveSale() {
         Sale existing = new Sale();
         existing.setSku("OLD");
         existing.setUnits(1);
@@ -168,8 +168,8 @@ class SaleServiceTest {
     }
 
     @Test
-    @DisplayName("updateSale debe lanzar RuntimeException si no existe la venta")
-    void updateSale_notFound() {
+    @DisplayName("should throw when updating non-existing sale")
+    void shouldThrowWhenUpdatingNonExistingSale() {
         when(saleRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> saleService.updateSale(999L, saleBase))
@@ -181,8 +181,8 @@ class SaleServiceTest {
     }
 
     @Test
-    @DisplayName("deleteSale debe invocar deleteById en el repositorio")
-    void deleteSale_ok() {
+    @DisplayName("should delete sale by id")
+    void shouldDeleteSaleById() {
         doNothing().when(saleRepository).deleteById(77L);
 
         saleService.deleteSale(77L);
@@ -191,4 +191,3 @@ class SaleServiceTest {
         verifyNoMoreInteractions(saleRepository);
     }
 }
-

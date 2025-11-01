@@ -1,6 +1,5 @@
 package com.example.hack1base.ReportRequest.Domain;
 
-
 import com.example.hack1base.ReportRequest.domain.ReportRequest;
 import com.example.hack1base.ReportRequest.domain.ReportRequestService;
 import com.example.hack1base.ReportRequest.domain.ReportStatus;
@@ -55,8 +54,8 @@ class ReportRequestServiceTest {
     }
 
     @Test
-    @DisplayName("createReportRequest guarda y devuelve el reporte")
-    void createReportRequest_ok() {
+    @DisplayName("should save report request and return saved entity")
+    void shouldSaveReportRequestAndReturnSavedEntity() {
         when(reportRequestRepository.save(any(ReportRequest.class)))
                 .thenAnswer(inv -> inv.getArgument(0));
 
@@ -74,8 +73,8 @@ class ReportRequestServiceTest {
     }
 
     @Test
-    @DisplayName("getAllReportRequests retorna la lista del repositorio")
-    void getAllReportRequests_ok() {
+    @DisplayName("should return all report requests from repository")
+    void shouldReturnAllReportRequestsFromRepository() {
         ReportRequest other = ReportRequest.builder()
                 .branch("San Isidro")
                 .fromDate(LocalDate.of(2025, 9, 1))
@@ -98,8 +97,8 @@ class ReportRequestServiceTest {
     }
 
     @Test
-    @DisplayName("getReportRequestById devuelve Optional con el reporte si existe")
-    void getReportRequestById_found() {
+    @DisplayName("should return report request by id when it exists")
+    void shouldReturnReportRequestByIdWhenExists() {
         when(reportRequestRepository.findById(10L)).thenReturn(Optional.of(base));
 
         Optional<ReportRequest> found = reportRequestService.getReportRequestById(10L);
@@ -112,8 +111,8 @@ class ReportRequestServiceTest {
     }
 
     @Test
-    @DisplayName("getReportRequestById devuelve Optional.empty si no existe")
-    void getReportRequestById_empty() {
+    @DisplayName("should return empty optional when report request does not exist")
+    void shouldReturnEmptyOptionalWhenReportRequestDoesNotExist() {
         when(reportRequestRepository.findById(999L)).thenReturn(Optional.empty());
 
         Optional<ReportRequest> found = reportRequestService.getReportRequestById(999L);
@@ -124,8 +123,8 @@ class ReportRequestServiceTest {
     }
 
     @Test
-    @DisplayName("updateReportRequest actualiza campos y guarda (branch, fechas, emailTo, status, message)")
-    void updateReportRequest_ok() {
+    @DisplayName("should update fields and save report request")
+    void shouldUpdateFieldsAndSaveReportRequest() {
         ReportRequest existing = ReportRequest.builder()
                 .branch("Miraflores")
                 .fromDate(LocalDate.of(2025, 9, 1))
@@ -171,8 +170,8 @@ class ReportRequestServiceTest {
     }
 
     @Test
-    @DisplayName("updateReportRequest lanza RuntimeException si no existe")
-    void updateReportRequest_notFound() {
+    @DisplayName("should throw when updating non-existing report request")
+    void shouldThrowWhenUpdatingNonExistingReportRequest() {
         when(reportRequestRepository.findById(404L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> reportRequestService.updateReportRequest(404L, base))
@@ -184,8 +183,8 @@ class ReportRequestServiceTest {
     }
 
     @Test
-    @DisplayName("deleteReportRequest invoca deleteById en el repositorio")
-    void deleteReportRequest_ok() {
+    @DisplayName("should delete report request by id")
+    void shouldDeleteReportRequestById() {
         doNothing().when(reportRequestRepository).deleteById(77L);
 
         reportRequestService.deleteReportRequest(77L);

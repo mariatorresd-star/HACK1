@@ -46,7 +46,6 @@ class UserControllerTest {
     @MockitoBean
     UserService userService;
 
-    // Habilita @PreAuthorize en el slice test
     @TestConfiguration
     @EnableWebSecurity
     @EnableMethodSecurity
@@ -81,12 +80,11 @@ class UserControllerTest {
 
     // ---------- /auth/register ----------
     @Test
-    @DisplayName("POST /auth/register → 200 y cuerpo UserResponse")
-    void register_ok() throws Exception {
+    @DisplayName("should register user and return 200 OK with UserResponse")
+    void shouldRegisterReturnOkWithUserResponse() throws Exception {
         User req = makeUserReq("alice", "alice@example.com", "Secret123!", Role.CENTRAL, null);
         UserResponse resp = makeResp("1", "alice", "alice@example.com", "CENTRAL", null);
 
-        // Usamos nombre totalmente calificado para evitar cualquier ambigüedad con any()
         Mockito.when(userService.register(org.mockito.ArgumentMatchers.<User>any()))
                 .thenReturn(resp);
 
@@ -106,8 +104,8 @@ class UserControllerTest {
 
     // ---------- /auth/login ----------
     @Test
-    @DisplayName("POST /auth/login → 200 cuando credenciales válidas")
-    void login_ok() throws Exception {
+    @DisplayName("should return 200 OK when credentials are valid")
+    void shouldLoginReturnOkWhenCredentialsAreValid() throws Exception {
         User req = new User();
         req.setEmail("alice@example.com");
         req.setPassword("Secret123!");
@@ -128,28 +126,28 @@ class UserControllerTest {
 
     // ---------- Endpoints protegidos ----------
     @Nested
-    @DisplayName("Seguridad y acceso a /users*")
+    @DisplayName("Security and access to /users*")
     class SecuredEndpoints {
 
         @Test
-        @DisplayName("GET /users → 401 si no autenticado")
-        void getAll_unauthenticated() throws Exception {
+        @DisplayName("should return 401 Unauthorized on GET /users when unauthenticated")
+        void shouldReturnUnauthorizedOnGetAllWhenUnauthenticated() throws Exception {
             mvc.perform(get("/users"))
                     .andExpect(status().isUnauthorized());
         }
 
         @Test
-        @DisplayName("GET /users → 403 si autenticado con rol BRANCH")
+        @DisplayName("should return 403 Forbidden on GET /users for BRANCH role")
         @WithMockUser(roles = {"BRANCH"})
-        void getAll_forbidden_whenBranch() throws Exception {
+        void shouldReturnForbiddenOnGetAllForBranchRole() throws Exception {
             mvc.perform(get("/users"))
                     .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("GET /users → 200 para CENTRAL y lista mapeada")
+        @DisplayName("should return 200 OK with mapped list on GET /users for CENTRAL role")
         @WithMockUser(roles = {"CENTRAL"})
-        void getAll_ok_whenCentral() throws Exception {
+        void shouldReturnOkWithListOnGetAllForCentralRole() throws Exception {
             List<UserResponse> list = List.of(
                     makeResp("1", "alice", "alice@example.com", "CENTRAL", null),
                     makeResp("2", "bob", "bob@example.com", "BRANCH", "LIMA-01")
@@ -165,24 +163,24 @@ class UserControllerTest {
         }
 
         @Test
-        @DisplayName("GET /users/{id} → 401 si no autenticado")
-        void getById_unauthenticated() throws Exception {
+        @DisplayName("should return 401 Unauthorized on GET /users/{id} when unauthenticated")
+        void shouldReturnUnauthorizedOnGetByIdWhenUnauthenticated() throws Exception {
             mvc.perform(get("/users/9"))
                     .andExpect(status().isUnauthorized());
         }
 
         @Test
-        @DisplayName("GET /users/{id} → 403 si autenticado BRANCH")
+        @DisplayName("should return 403 Forbidden on GET /users/{id} for BRANCH role")
         @WithMockUser(roles = {"BRANCH"})
-        void getById_forbidden_whenBranch() throws Exception {
+        void shouldReturnForbiddenOnGetByIdForBranchRole() throws Exception {
             mvc.perform(get("/users/9"))
                     .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("GET /users/{id} → 200 para CENTRAL")
+        @DisplayName("should return 200 OK with body on GET /users/{id} for CENTRAL role")
         @WithMockUser(roles = {"CENTRAL"})
-        void getById_ok_whenCentral() throws Exception {
+        void shouldReturnOkOnGetByIdForCentralRole() throws Exception {
             UserResponse resp = makeResp("9", "carol", "carol@example.com", "BRANCH", "SURCO-01");
             Mockito.when(userService.getUserById(9L)).thenReturn(resp);
 
@@ -194,24 +192,24 @@ class UserControllerTest {
         }
 
         @Test
-        @DisplayName("DELETE /users/{id} → 401 si no autenticado")
-        void delete_unauthenticated() throws Exception {
+        @DisplayName("should return 401 Unauthorized on DELETE /users/{id} when unauthenticated")
+        void shouldReturnUnauthorizedOnDeleteWhenUnauthenticated() throws Exception {
             mvc.perform(delete("/users/7"))
                     .andExpect(status().isUnauthorized());
         }
 
         @Test
-        @DisplayName("DELETE /users/{id} → 403 si autenticado BRANCH")
+        @DisplayName("should return 403 Forbidden on DELETE /users/{id} for BRANCH role")
         @WithMockUser(roles = {"BRANCH"})
-        void delete_forbidden_whenBranch() throws Exception {
+        void shouldReturnForbiddenOnDeleteForBranchRole() throws Exception {
             mvc.perform(delete("/users/7"))
                     .andExpect(status().isForbidden());
         }
 
         @Test
-        @DisplayName("DELETE /users/{id} → 204 para CENTRAL")
+        @DisplayName("should return 204 No Content on DELETE /users/{id} for CENTRAL role")
         @WithMockUser(roles = {"CENTRAL"})
-        void delete_ok_whenCentral() throws Exception {
+        void shouldReturnNoContentOnDeleteForCentralRole() throws Exception {
             mvc.perform(delete("/users/7"))
                     .andExpect(status().isNoContent());
 

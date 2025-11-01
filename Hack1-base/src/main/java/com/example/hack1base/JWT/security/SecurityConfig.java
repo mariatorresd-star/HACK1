@@ -1,5 +1,6 @@
 package com.example.hack1base.JWT.security;
 
+import com.example.hack1base.JWT.services.AccountService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

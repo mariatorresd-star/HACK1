@@ -1,6 +1,5 @@
 package com.example.hack1base.User.estructure;
 
-
 import com.example.hack1base.User.domain.Role;
 import com.example.hack1base.User.domain.User;
 import org.junit.jupiter.api.DisplayName;
@@ -15,8 +14,6 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
-// Si usas Testcontainers, agrega tu @Testcontainers/@Container y configura datasource.
-// @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest {
 
     @Autowired
@@ -33,8 +30,8 @@ class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("save: persiste un usuario y asigna ID; createdAt no es nulo si se gestiona automáticamente")
-    void save_persistsUser() {
+    @DisplayName("should persist user, assign ID, and initialize createdAt automatically")
+    void shouldPersistUserAssignIdAndInitializeCreatedAt() {
         User toSave = buildUser("alice", "alice@example.com", Role.CENTRAL, null);
 
         User saved = userRepository.save(toSave);
@@ -42,9 +39,8 @@ class UserRepositoryTest {
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getUsername()).isEqualTo("alice");
         assertThat(saved.getEmail()).isEqualTo("alice@example.com");
-        // Si tu entidad inicializa createdAt (via @PrePersist o default DB), esto será no nulo.
         assertThat(saved.getCreatedAt())
-                .as("createdAt debería inicializarse en persist")
+                .as("createdAt should be initialized on persist")
                 .isNotNull();
         assertThat(saved.getCreatedAt())
                 .isBeforeOrEqualTo(LocalDateTime.now().plusSeconds(1));
@@ -55,8 +51,8 @@ class UserRepositoryTest {
     class ExistenceChecks {
 
         @Test
-        @DisplayName("existsByEmail: true cuando el email existe; false cuando no")
-        void existsByEmail_trueFalse() {
+        @DisplayName("should return true when email exists and false otherwise")
+        void shouldReturnTrueWhenEmailExistsAndFalseOtherwise() {
             userRepository.save(buildUser("alice", "alice@example.com", Role.CENTRAL, null));
 
             assertThat(userRepository.existsByEmail("alice@example.com")).isTrue();
@@ -64,8 +60,8 @@ class UserRepositoryTest {
         }
 
         @Test
-        @DisplayName("existsByUsername: true cuando el username existe; false cuando no")
-        void existsByUsername_trueFalse() {
+        @DisplayName("should return true when username exists and false otherwise")
+        void shouldReturnTrueWhenUsernameExistsAndFalseOtherwise() {
             userRepository.save(buildUser("bob", "bob@example.com", Role.BRANCH, "LIMA-01"));
 
             assertThat(userRepository.existsByUsername("bob")).isTrue();
@@ -78,8 +74,8 @@ class UserRepositoryTest {
     class FindByEmail {
 
         @Test
-        @DisplayName("findByEmail: devuelve la entidad cuando existe")
-        void findByEmail_returnsEntity() {
+        @DisplayName("should return entity when email exists")
+        void shouldReturnEntityWhenEmailExists() {
             User saved = userRepository.save(buildUser("dora", "dora@example.com", Role.CENTRAL, null));
 
             User found = userRepository.findByEmail("dora@example.com");
@@ -91,20 +87,20 @@ class UserRepositoryTest {
         }
 
         @Test
-        @DisplayName("findByEmail: devuelve null cuando no existe")
-        void findByEmail_returnsNullWhenNotFound() {
+        @DisplayName("should return null when email does not exist")
+        void shouldReturnNullWhenEmailDoesNotExist() {
             User found = userRepository.findByEmail("missing@example.com");
             assertThat(found).isNull();
         }
     }
 
     @Nested
-    @DisplayName("Restricciones de unicidad (email y username)")
+    @DisplayName("unique constraints (email and username)")
     class UniqueConstraints {
 
         @Test
-        @DisplayName("No permite duplicar email")
-        void uniqueEmail() {
+        @DisplayName("should not allow duplicate email")
+        void shouldNotAllowDuplicateEmail() {
             userRepository.saveAndFlush(buildUser("eva", "eva@example.com", Role.CENTRAL, null));
 
             User dupEmail = buildUser("eva2", "eva@example.com", Role.BRANCH, "SURCO-01");
@@ -114,8 +110,8 @@ class UserRepositoryTest {
         }
 
         @Test
-        @DisplayName("No permite duplicar username")
-        void uniqueUsername() {
+        @DisplayName("should not allow duplicate username")
+        void shouldNotAllowDuplicateUsername() {
             userRepository.saveAndFlush(buildUser("frank", "frank@example.com", Role.CENTRAL, null));
 
             User dupUsername = buildUser("frank", "frank2@example.com", Role.BRANCH, "LIMA-02");

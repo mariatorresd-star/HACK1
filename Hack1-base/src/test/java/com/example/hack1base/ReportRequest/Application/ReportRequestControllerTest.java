@@ -52,7 +52,7 @@ class ReportRequestControllerTest {
 
     @Test
     @DisplayName("POST /api/report-requests -> 200 OK con cuerpo")
-    void create_ok() throws Exception {
+    void shouldCreateReportRequestReturnOkWithBody() throws Exception {
         ReportRequest payload = buildReq("Miraflores", "reports@demo.com", ReportStatus.PROCESSING);
         ReportRequest returned = buildReq("Miraflores", "reports@demo.com", ReportStatus.PROCESSING);
 
@@ -75,7 +75,7 @@ class ReportRequestControllerTest {
 
     @Test
     @DisplayName("GET /api/report-requests -> 200 OK lista")
-    void getAll_ok() throws Exception {
+    void  shouldReturnAllReportRequestsWithOkAndListBody() throws Exception {
         List<ReportRequest> list = List.of(
                 buildReq("Miraflores", "mira@demo.com", ReportStatus.PROCESSING),
                 buildReq("San Isidro", "si@demo.com", ReportStatus.COMPLETED)
@@ -95,7 +95,7 @@ class ReportRequestControllerTest {
 
     @Test
     @DisplayName("GET /api/report-requests/{id} -> 200 OK cuando existe")
-    void getById_found() throws Exception {
+    void shouldReturnReportRequestByIdWhenExists() throws Exception {
         ReportRequest rr = buildReq("Miraflores", "reports@demo.com", ReportStatus.PROCESSING);
         when(reportRequestService.getReportRequestById(10L)).thenReturn(Optional.of(rr));
 
@@ -111,7 +111,7 @@ class ReportRequestControllerTest {
 
     @Test
     @DisplayName("GET /api/report-requests/{id} -> 404 Not Found cuando no existe")
-    void getById_notFound() throws Exception {
+    void shouldReturnNotFoundWhenReportRequestDoesNotExist() throws Exception {
         when(reportRequestService.getReportRequestById(404L)).thenReturn(Optional.empty());
 
         mockMvc.perform(get(BASE_URL + "/{id}", 404L))
@@ -123,7 +123,7 @@ class ReportRequestControllerTest {
 
     @Test
     @DisplayName("PUT /api/report-requests/{id} -> 200 OK con actualizado")
-    void update_ok() throws Exception {
+    void shouldUpdateReportRequestByIdReturnOkWithUpdatedBody() throws Exception {
         ReportRequest payload = buildReq("San Isidro", "new@demo.com", ReportStatus.COMPLETED);
         ReportRequest returned = buildReq("San Isidro", "new@demo.com", ReportStatus.COMPLETED);
 
@@ -146,7 +146,7 @@ class ReportRequestControllerTest {
 
     @Test
     @DisplayName("DELETE /api/report-requests/{id} -> 204 No Content")
-    void delete_ok() throws Exception {
+    void shouldDeleteReportRequestByIdReturnNoContent() throws Exception {
         doNothing().when(reportRequestService).deleteReportRequest(77L);
 
         mockMvc.perform(delete(BASE_URL + "/{id}", 77L))

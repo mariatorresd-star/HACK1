@@ -1,4 +1,5 @@
 package com.example.hack1base.User.domain;
+
 import com.example.hack1base.User.estructure.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -68,8 +68,8 @@ class UserServiceTest {
     // ---------- REGISTER ----------
 
     @Test
-    @DisplayName("register: crea usuario cuando email/username no existen, encripta y mapea a UserResponse (id/role String)")
-    void register_success() {
+    @DisplayName("should create user when email/username are unique, encrypt password and map to UserResponse (id/role as String)")
+    void shouldRegisterWhenEmailAndUsernameAreUniqueEncryptAndMap() {
         User toSave = cloneUser(userCentral);
         toSave.setId(null); // simulamos nuevo
 
@@ -102,8 +102,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("register: falla si email ya existe")
-    void register_emailAlreadyExists() {
+    @DisplayName("should fail to register when email already exists")
+    void shouldFailToRegisterWhenEmailAlreadyExists() {
         when(userRepository.existsByEmail("alice@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> userService.register(userCentral))
@@ -115,8 +115,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("register: falla si username ya existe")
-    void register_usernameAlreadyExists() {
+    @DisplayName("should fail to register when username already exists")
+    void shouldFailToRegisterWhenUsernameAlreadyExists() {
         when(userRepository.existsByEmail("alice@example.com")).thenReturn(false);
         when(userRepository.existsByUsername("alice")).thenReturn(true);
 
@@ -131,8 +131,8 @@ class UserServiceTest {
     // ---------- LOGIN ----------
 
     @Test
-    @DisplayName("login: retorna UserResponse cuando credenciales son válidas (role como String)")
-    void login_success() {
+    @DisplayName("should return UserResponse when credentials are valid (role as String)")
+    void shouldReturnUserResponseWhenCredentialsAreValid() {
         User dbUser = cloneUser(userCentral);
         dbUser.setPassword("ENCODED");
 
@@ -152,8 +152,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("login: lanza excepción si email no existe")
-    void login_emailNotFound() {
+    @DisplayName("should throw when email is not found on login")
+    void shouldThrowWhenEmailNotFoundOnLogin() {
         when(userRepository.findByEmail("nope@example.com")).thenReturn(null);
 
         assertThatThrownBy(() -> userService.login("nope@example.com", "pwd"))
@@ -164,8 +164,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("login: lanza excepción si password no coincide")
-    void login_badPassword() {
+    @DisplayName("should throw when password does not match on login")
+    void shouldThrowWhenPasswordDoesNotMatchOnLogin() {
         User dbUser = cloneUser(userCentral);
         dbUser.setPassword("ENCODED");
 
@@ -182,8 +182,8 @@ class UserServiceTest {
     // ---------- GET ALL ----------
 
     @Test
-    @DisplayName("getAllUsers: mapea lista completa a UserResponse (id/role String)")
-    void getAllUsers_mapsAll() {
+    @DisplayName("should map all users to UserResponse list (id/role as String)")
+    void shouldMapAllUsersToUserResponseList() {
         User u1 = cloneUser(userCentral);
 
         User u2 = new User();
@@ -230,8 +230,8 @@ class UserServiceTest {
     // ---------- GET BY ID ----------
 
     @Test
-    @DisplayName("getUserById: retorna mapeado cuando existe (id/role String)")
-    void getUserById_success() {
+    @DisplayName("should return mapped UserResponse when id exists (id/role as String)")
+    void shouldReturnMappedUserResponseWhenIdExists() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(userCentral));
         when(modelMapper.map(userCentral, UserResponse.class)).thenReturn(userResponseCentral);
 
@@ -245,8 +245,8 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("getUserById: lanza excepción si no existe")
-    void getUserById_notFound() {
+    @DisplayName("should throw when user id does not exist")
+    void shouldThrowWhenUserIdDoesNotExist() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> userService.getUserById(99L))
@@ -262,8 +262,8 @@ class UserServiceTest {
     class DeleteUser {
 
         @Test
-        @DisplayName("deleteUser: elimina cuando existe")
-        void deleteUser_success() {
+        @DisplayName("should delete when user exists")
+        void shouldDeleteWhenUserExists() {
             when(userRepository.existsById(10L)).thenReturn(true);
 
             userService.deleteUser(10L);
@@ -273,8 +273,8 @@ class UserServiceTest {
         }
 
         @Test
-        @DisplayName("deleteUser: lanza excepción cuando no existe")
-        void deleteUser_notFound() {
+        @DisplayName("should throw when user does not exist")
+        void shouldThrowWhenUserDoesNotExist() {
             when(userRepository.existsById(10L)).thenReturn(false);
 
             assertThatThrownBy(() -> userService.deleteUser(10L))
