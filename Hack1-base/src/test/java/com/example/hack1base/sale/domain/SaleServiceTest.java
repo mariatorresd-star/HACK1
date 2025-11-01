@@ -124,7 +124,6 @@ class SaleServiceTest {
     @Test
     @DisplayName("updateSale debe copiar campos de saleDetails y guardar")
     void updateSale_ok() {
-        // existente
         Sale existing = new Sale();
         existing.setSku("OLD");
         existing.setUnits(1);
@@ -136,11 +135,10 @@ class SaleServiceTest {
         when(saleRepository.findById(10L)).thenReturn(Optional.of(existing));
         when(saleRepository.save(any(Sale.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        // nuevos datos
         User other = new User();
         other.setUsername("other.user");
         other.setEmail("other@mail.com");
-        other.setRole(Role.CENTRAL);              // <<< ENUM
+        other.setRole(Role.CENTRAL);
         other.setBranch("San Isidro");
 
         Sale details = new Sale();

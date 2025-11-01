@@ -17,9 +17,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.hasSize; // <— evita wildcard para no traer hamcrest.any
-import static org.mockito.ArgumentMatchers.any; // <— Mockito
-import static org.mockito.ArgumentMatchers.eq;  // <— Mockito
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -38,7 +38,6 @@ class ReportRequestControllerTest {
     @MockitoBean
     private ReportRequestService reportRequestService;
 
-    // ---------- helpers ----------
     private ReportRequest buildReq(String branch, String email, ReportStatus status) {
         return ReportRequest.builder()
                 .branch(branch)
@@ -50,8 +49,6 @@ class ReportRequestControllerTest {
                 .requestedBy(null)
                 .build();
     }
-
-    // ---------- tests ----------
 
     @Test
     @DisplayName("POST /api/report-requests -> 200 OK con cuerpo")
