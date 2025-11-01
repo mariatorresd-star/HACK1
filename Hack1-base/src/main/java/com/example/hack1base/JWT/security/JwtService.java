@@ -45,7 +45,7 @@ public class JwtService {
     }
 
     public Claims extractAllClaims(String token) throws ExpiredJwtException {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
     public String extractUsername(String token) {
