@@ -29,7 +29,7 @@ public class ModelConfig {
                 using(ctx -> {
                     User createdBy = (User) ctx.getSource();
                     return createdBy != null ? createdBy.getUsername() : null;
-                }).map(source.getCreatedBy(), destination.setCreatedBy(null));
+                }).map(source.getCreatedBy(), destination.getCreatedBy());
             }
         });
 
