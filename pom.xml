@@ -5,8 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.6</version>
-        <relativePath/> 
+        <version>3.3.4</version>
     </parent>
     <groupId>com.example</groupId>
     <artifactId>Hack1-base</artifactId>
@@ -113,6 +112,11 @@
             <artifactId>mockwebserver</artifactId>
             <version>4.12.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.crac</groupId>
+            <artifactId>crac</artifactId>
+            <version>1.4.0</version>
         </dependency>
     </dependencies>
 
