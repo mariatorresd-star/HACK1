@@ -18,7 +18,7 @@ public class ReportRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long id;
+    private String id;
 
     @Column(nullable = false)
     private String branch; 

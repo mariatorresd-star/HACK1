@@ -18,10 +18,10 @@ public class JwtService {
 
     private SecretKey secretKey;
     private final String secret;
-    private final long expirationMillis;
+    private final Long expirationMillis;
 
     public JwtService(@Value("${jwt.secret}") String secret,
-                      @Value("${jwt.expirationMillis:3600000}") long expirationMillis) {
+                      @Value("${jwt.expirationMillis:3600000}") Long expirationMillis) {
         this.secret = secret;
         this.expirationMillis = expirationMillis;
     }

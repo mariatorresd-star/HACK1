@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long id;
+    private String id;
 
     @Column(nullable = false)
     private String sku;
